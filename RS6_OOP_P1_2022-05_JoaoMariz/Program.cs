@@ -10,6 +10,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
     {
         static void Main(string[] args)
         {
+
+            do
+            {
+                RSGym.IniciarConsola();
+            }
+
+            while (exitFlag);
         }
     }
 }
