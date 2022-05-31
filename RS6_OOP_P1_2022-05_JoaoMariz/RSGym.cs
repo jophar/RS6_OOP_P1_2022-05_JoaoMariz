@@ -6,47 +6,39 @@ using System.Threading.Tasks;
 
 namespace RS6_OOP_P1_2022_05_JoaoMariz
 {
+    /*
+     * Classe RSGym que contem o objecto CLI e os metodos 
+     * para as opções do CLI
+     */
+
     class RSGym
     {
-        #region Constructores
-        internal string PersonalTrainerName { get; set; }
-        internal string UserName { get; set; }
-        internal DateTime DataDaAula { get; set; }
-        internal bool LogInCorrecto { get; set; }
-        internal bool AulaAceite { get; set; }
-        internal int NumeroDoPedido { get; set; }
+        /* 
+         * Variavel onde vai ser "guardado" o utilizador que se encontra ativo
+         * Por default está gravado o RSGym e que só irá permitir registos
+         * caso seja diferente deste valor
+         * internal dado que é manupulado pela classe Autenticação
+         */
 
-        // Construtor vazio
-      /*  internal RSGym()
-        {
-            string PersonalTrainerName = string.Empty;
-            string UserName = string.Empty;
-            DateTime DataDaAula = DateTime.MinValue;
-            bool LogInCorrecto = false;
-            bool AulaAceite = false;
-            int NumeroDoPedido = 0;
-        }*/
-
-        // Construtor completo
-        internal RSGym(string pt, string un, DateTime d, bool log, bool aa, int num)
-        {
-            string PersonalTrainerName = pt;
-            string UserName = un;
-            DateTime DataDaAula = d;
-            bool LogInCorrecto = log;
-            bool AulaAceite = aa;
-            int NumeroDoPedido = num;
-        }
-
-        #endregion
-
-        // Variavel onde vai ser "guardado" o utilizador que se encontra ativo
         internal static string currentUser = "RSGym";
+
+
+        /*
+         * Escape flag da consola cujo loop exite no Program.cs
+         * Caso seja evocado o metodo Sair(), altera a flag e o 
+         * programa termina.
+         * internal dado que é lido o valor no Program.cs
+         */
+
         internal static bool exitFlag = true;
 
-        // Variavel helpMenu com a informação de todos os comandos.
-        // Serve tambem para verificar se a opção introduzida é correcta
-        private static Dictionary<string, string> helpMenu = new Dictionary<string, string>
+
+        /* 
+         * Variavel helpMenu com a informação de todos os comandos.
+         * Usada a flag "readonly" dado que não é para alterar o conteudo.
+         */
+
+        private static readonly Dictionary<string, string> helpMenu = new Dictionary<string, string>
         {
             {"help" ,       "Lista este menu de ajuda"},
             {"exit" ,       "Sair da aplicação"},
@@ -67,7 +59,14 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             "\t\t Utilização: requests -a" }
         };
 
-        // Lista com os nomes dos PT's e Datas registadas entretanto
+
+        /*
+         * Lista que vai receber todas as aulas introduzidas até ao momento
+         */
+
+        internal static List<Aula> aulas = new List<Aula>();
+
+
         private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
         {
             { "Maria", new List<DateTime>() },
@@ -80,6 +79,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         private static Dictionary<int, string> requests = new Dictionary<int, string>();
 
         // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe
+        // usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
+        // Se necessário adicionar mais item's, já fica formatado
         internal static void Ajuda() 
         {            
             foreach (KeyValuePair<string,string> item in helpMenu)
@@ -101,33 +102,58 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         private static void ParseArgument(string arg)
         {
-            string[] tmp = arg.Split(' ');
-
-
+            string[] tmp = new string[0];
+            tmp = arg.Split(' ');
 
             switch (tmp[0])
             {
                 case "help": Ajuda(); break;
                 case "exit": Sair(); break;
                 case "clear": LimparConsola(); break;
+
                 case "login":
                     {
                         Console.WriteLine($"{tmp[0]} - {tmp[1]} - {tmp[2]} - {tmp[3]} - {tmp[4]}\n");
-                        if(tmp[1] == "-u" && tmp[3] == "-p")
-                            Autenticacao.Login(tmp[2], tmp[4]);
-                        else
+                        if (tmp[1] == "-u" && tmp[3] == "-p" && tmp.Length == 5)
                         {
-                            Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda");
-                            Console.WriteLine("Pressione qualquer tecla para continuar...");
-                            Console.ReadKey();
+                            Autenticacao.Login(tmp[2], tmp[4]);
+                            break;
                         }
-                        break;
+                        else
+                            Utilitarios.AjudaInfo();     
                     }
+                    break;
+
+                case "request":
+                    {
+                        if (tmp[1] == "-n" && tmp[3] == "-d" && tmp[5] == "-h" && tmp.Length == 7)
+                        {
+                            DateTime dia, hora, all = new DateTime();
+                            string n = tmp[2];
+                            bool d = DateTime.TryParse(tmp[4], out dia);
+                            if (!d)
+                            {
+                                Console.WriteLine("Dia introduzido no formato errado. Use \"help\" na consola para obter ajuda\n");
+                                break;
+                            }
+                            bool h = DateTime.TryParse(tmp[6], out hora);
+                            if (!h)
+                            {
+                                Console.WriteLine("Hora introduzida no formato errado. Use \"help\" na consola para obter ajuda\n");
+                                break;
+                            }
+
+                            all = dia.Date.Add(hora.TimeOfDay);
+
+                            IntroduzirPedido(n, all);
+                        }
+                        else
+                            Utilitarios.AjudaInfo();
+                    }
+                    break;
                 default:
                     {
-                        Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda");
-                        Console.WriteLine("Pressione qualquer tecla para continuar...");
-                        Console.ReadKey();
+                        Utilitarios.AjudaInfo();
                     }
                     break;
             }
@@ -161,13 +187,22 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal static void ListarPedidos()
         { }
 
-        internal void IntroduzirPedido(string nome, DateTime data)
+        internal static void IntroduzirPedido(string nome, DateTime data)
         {
+            if(currentUser == "RSGym")
+            {
+                Console.WriteLine("Utilizador não autorizado a realizar a operação");
+                Console.WriteLine("Por favor efetuar login na consola");
+                IniciarConsola();
+            }
+
             List<DateTime> tempList = new List<DateTime>();
 
             foreach (KeyValuePair<string, List<DateTime>> item in personalTrainers)
             {
-                if(item.Key.Contains(nome))
+                bool teste = item.Key == nome;
+                Console.WriteLine($"{item.Key} , {nome}, {teste}");
+                if(item.Key == nome)
                 {
                     foreach (DateTime d in item.Value)
                     {
