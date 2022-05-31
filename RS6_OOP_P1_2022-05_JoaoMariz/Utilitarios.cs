@@ -10,9 +10,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
     {
         internal static void AjudaInfo()
         {
-            Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda");
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
+            Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda\n");
         }
     }
 }

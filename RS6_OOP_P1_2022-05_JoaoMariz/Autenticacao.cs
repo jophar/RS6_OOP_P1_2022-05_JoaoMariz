@@ -39,14 +39,11 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 {
                     Console.WriteLine($"{user} autenticado com sucesso\n");
                     RSGym.currentUser = user;
-                    break;
-                }
-
-                else
-                {
-                    Console.WriteLine("Username ou Password errados, por favor tente novamente\n");
+                    return;
                 }
             }
+
+            Console.WriteLine("Username ou Password errados, por favor tente novamente\n");
         }
     }
 }

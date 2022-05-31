@@ -31,6 +31,16 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             int NumeroDoPedido = num;
         }
 
+        internal static void Request() // ver se da para usar o outro metodo
+        { }
 
+        internal static void AnularAula()
+        { }
+
+        internal static void ConcluirAula()
+        { }
+
+        internal static void InserirMensagem()
+        { }
     }
 }

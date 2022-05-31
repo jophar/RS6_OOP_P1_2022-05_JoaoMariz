@@ -113,14 +113,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "login":
                     {
-                        Console.WriteLine($"{tmp[0]} - {tmp[1]} - {tmp[2]} - {tmp[3]} - {tmp[4]}\n");
                         if (tmp[1] == "-u" && tmp[3] == "-p" && tmp.Length == 5)
                         {
                             Autenticacao.Login(tmp[2], tmp[4]);
-                            break;
+                            IniciarConsola();
                         }
                         else
-                            Utilitarios.AjudaInfo();     
+                            Utilitarios.AjudaInfo();
                     }
                     break;
 
@@ -146,11 +145,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             all = dia.Date.Add(hora.TimeOfDay);
 
                             IntroduzirPedido(n, all);
+                            return;
                         }
                         else
                             Utilitarios.AjudaInfo();
                     }
                     break;
+
                 default:
                     {
                         Utilitarios.AjudaInfo();
@@ -169,17 +170,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             Console.Clear();
         }
 
-        internal static void Request() // ver se da para usar o outro metodo
-        { }
 
-        internal static void AnularAula()
-        { }
-
-        internal static void ConcluirAula()
-        { }
-
-        internal static void InserirMensagem()
-        { }
 
         internal static void VerPedido()
         { }
@@ -192,35 +183,30 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             if(currentUser == "RSGym")
             {
                 Console.WriteLine("Utilizador não autorizado a realizar a operação");
-                Console.WriteLine("Por favor efetuar login na consola");
-                IniciarConsola();
+                Console.WriteLine("Por favor efetuar login na consola\n");
+                return;
             }
 
             List<DateTime> tempList = new List<DateTime>();
 
             foreach (KeyValuePair<string, List<DateTime>> item in personalTrainers)
             {
-                bool teste = item.Key == nome;
-                Console.WriteLine($"{item.Key} , {nome}, {teste}");
                 if(item.Key == nome)
                 {
                     foreach (DateTime d in item.Value)
                     {
                         if (data == d)
                         {
-                            Console.WriteLine($"{item.Key} com este horario ocupado. Por favor selecionar outro dia e hora");
-                            Console.WriteLine("Pressionar qualquer tecla para continuar");
-                            Console.ReadKey();
-                            break;
+                            Console.WriteLine($"{item.Key} com este horario ocupado. Por favor selecionar outro dia e hora\n");
+                            return;
                         }
                         else
                         {
                             if (d.Hour < 9 || d.Hour > 20)
                             {
                                 Console.WriteLine("Marcação fora do horario permitido");
-                                Console.WriteLine("Pressionar qualquer tecla para continuar");
-                                Console.ReadKey();
-                                break;
+                                Console.WriteLine("Por favor introduzir um horario entre as 9:00 e as 20:00\n");
+                                return;
                             }
                         
                             else
@@ -233,21 +219,16 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                                 personalTrainers.Add(nome, tempList);
                                 requests.Add(num + 1, currentUser);
 
-                                Console.WriteLine($"Aula marcada com sucesso");
-                                Console.WriteLine("Pressionar qualquer tecla para continuar");
-                                Console.ReadKey();
+                                Console.WriteLine($"Aula marcada com sucesso\n");
+                                return;
                             }   
                         }
                     }
                 }
 
-                else 
-                {
-                    Console.WriteLine($"O personal trainer com o nome {nome} não existe");
-                    Console.WriteLine("Pressionar qualquer tecla para continuar");
-                    Console.ReadKey();
-                }
             }
+
+            Console.WriteLine($"O personal trainer com o nome {nome} não existe\n");
         }
 
 
