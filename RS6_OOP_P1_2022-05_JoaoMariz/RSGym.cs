@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace RS6_OOP_P1_2022_05_JoaoMariz
 {
@@ -69,9 +70,9 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
         {
-            { "Maria", new List<DateTime>() },
-            { "José", new List<DateTime>() },
-            { "MeninoJesus", new List<DateTime>() }
+            { "Maria", new List<DateTime>() { DateTime.MinValue } },
+            { "José", new List<DateTime>() { DateTime.MinValue } },
+            { "MeninoJesus", new List<DateTime>() { DateTime.MinValue } }
         };
 
         // Variavel com os requests feitos
@@ -113,6 +114,24 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "login":
                     {
+                        string login, pass;
+                        string patternLogin = @"^login -u (?<user>[a-zA-Z0-9]+) -p (?<pass>[a-zA-Z0-9)";
+
+                        if (Regex.IsMatch(arg, patternLogin, RegexOptions.IgnoreCase))
+                        {
+                            Regex rx = new Regex(patternLogin, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            MatchCollection matches = rx.Matches(arg);
+
+                            foreach (Match match in matches)
+                            {
+                                GroupCollection groups = match.Groups;
+                                login = groups["user"].Value;
+                                pass = groups["pass"].Value;
+
+                                Autenticacao.Login(login, pass);
+                            }
+                        }
+
                         if (tmp[1] == "-u" && tmp[3] == "-p" && tmp.Length == 5)
                         {
                             Autenticacao.Login(tmp[2], tmp[4]);
@@ -125,6 +144,48 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "request":
                     {
+                        string patternRequest = @"^request -n (?<nome>[a-zA-Z0-9]+) -d (?<data>[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]) -h (?<hora>[0-9][0-9]:[0-9][0-9]$)";
+                        bool b = Regex.IsMatch(arg, patternRequest, RegexOptions.IgnoreCase);
+                        if (b) { 
+                           
+                            Regex rx = new Regex(patternRequest, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            MatchCollection matches = rx.Matches(arg);
+
+                            foreach (Match match in matches)
+                            {
+                                GroupCollection groups = match.Groups;
+                                Console.WriteLine(groups["nome"].Value);
+                                Console.WriteLine(groups["data"].Value);
+                                Console.WriteLine(groups["hora"].Value);
+
+                                string[] d = groups["data"].Value.Split('-');
+
+                                int[] i = new int[d.Length];
+
+                                for (int d = 0; d < length; d++)
+                                {
+
+                                }
+                                IntroduzirPedido(groups["nome"].Value, new DateTime((groups["data"].Value.Split(':'));
+                            }
+                        }
+                        else
+                        {
+                            Utilitarios.AjudaInfo();
+                        }
+                    };break;
+
+                             
+                         
+
+
+
+
+
+
+
+
+                        /*
                         if (tmp[1] == "-n" && tmp[3] == "-d" && tmp[5] == "-h" && tmp.Length == 7)
                         {
                             DateTime dia, hora, all = new DateTime();
@@ -146,11 +207,12 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                             IntroduzirPedido(n, all);
                             return;
+                        
                         }
                         else
                             Utilitarios.AjudaInfo();
                     }
-                    break;
+                    break;*/
 
                 default:
                     {
@@ -180,7 +242,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         internal static void IntroduzirPedido(string nome, DateTime data)
         {
-            if(currentUser == "RSGym")
+            if(currentUser.Equals("RSGym"))
             {
                 Console.WriteLine("Utilizador não autorizado a realizar a operação");
                 Console.WriteLine("Por favor efetuar login na consola\n");
@@ -191,11 +253,18 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             foreach (KeyValuePair<string, List<DateTime>> item in personalTrainers)
             {
-                if(item.Key == nome)
+                Console.WriteLine($"{item.Key}");
+                //Console.ReadLine();
+                //Console.WriteLine(nome);
+               // Console.WriteLine((item.Key.Equals(nome)));
+                if(item.Key.Equals(nome))
                 {
+                    
                     foreach (DateTime d in item.Value)
                     {
-                        if (data == d)
+                        Console.WriteLine($"{d} , {data}");
+
+                        if (data.Equals(d))
                         {
                             Console.WriteLine($"{item.Key} com este horario ocupado. Por favor selecionar outro dia e hora\n");
                             return;
