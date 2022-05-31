@@ -21,7 +21,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * internal dado que é manupulado pela classe Autenticação
          */
 
-        internal static string currentUser = "RSGym";
+        internal static string currentUser = "JMF";
 
 
         /*
@@ -47,7 +47,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             {"login",       "Fazer login na aplicação.\n" +
                             "\t\t Utilização: login -u {username} -p {password}"},
             {"request",     "Fazer o pedido do PT indicando: nome do PT, dia e horas.\n" +
-                            "\t\t Utilização: request -n {request} -d {dia} -h {horas}"},
+                            "\t\t Utilização: request -n {nome} -d {dd/mm/yyyy} -h {hh:mm}"},
             {"cancel",      "Anular um pedido\n" +
                             "\t\t Utilização: cancel -r {nº do pedido}"},
             {"finish",      "Dar informação que a aula foi concluida\n" +
@@ -65,7 +65,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * Lista que vai receber todas as aulas introduzidas até ao momento
          */
 
-        internal static List<Aula> aulas = new List<Aula>();
+        internal static Dictionary<int, Aula> aulas = new Dictionary<int, Aula>();
 
 
         private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
@@ -75,18 +75,15 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             { "MeninoJesus", new List<DateTime>() { DateTime.MinValue } }
         };
 
-        // Variavel com os requests feitos
-        // Quando é introduzido um request, incrementa a key e grava o utilizador que o fez
-        private static Dictionary<int, string> requests = new Dictionary<int, string>();
 
         // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe
         // usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
         // Se necessário adicionar mais item's, já fica formatado
-        internal static void Ajuda() 
-        {            
-            foreach (KeyValuePair<string,string> item in helpMenu)
+        internal static void Ajuda()
+        {
+            foreach (KeyValuePair<string, string> item in helpMenu)
             {
-                if(item.Key.Length < 8)
+                if (item.Key.Length < 8)
                     Console.WriteLine($"{item.Key}\t\t {item.Value}\n");
                 else
                     Console.WriteLine($"{item.Key}\t {item.Value}\n");
@@ -103,6 +100,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         private static void ParseArgument(string arg)
         {
+
             string[] tmp = new string[0];
             tmp = arg.Split(' ');
 
@@ -115,7 +113,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 case "login":
                     {
                         string login, pass;
-                        string patternLogin = @"^login -u (?<user>[a-zA-Z0-9]+) -p (?<pass>[a-zA-Z0-9)";
+                        string patternLogin = @"^login -u (?<user>[a-zA-Z0-9]+) -p (?<pass>[a-zA-Z0-9]+)";
 
                         if (Regex.IsMatch(arg, patternLogin, RegexOptions.IgnoreCase))
                         {
@@ -132,87 +130,98 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             }
                         }
 
-                        if (tmp[1] == "-u" && tmp[3] == "-p" && tmp.Length == 5)
-                        {
-                            Autenticacao.Login(tmp[2], tmp[4]);
-                            IniciarConsola();
-                        }
                         else
                             Utilitarios.AjudaInfo();
-                    }
-                    break;
+                    } break;
 
                 case "request":
                     {
-                        string patternRequest = @"^request -n (?<nome>[a-zA-Z0-9]+) -d (?<data>[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]) -h (?<hora>[0-9][0-9]:[0-9][0-9]$)";
-                        bool b = Regex.IsMatch(arg, patternRequest, RegexOptions.IgnoreCase);
-                        if (b) { 
-                           
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        string patternRequest = @"^request -n (?<nome>[A-zÀ-ú0-9]+) -d (?<data>[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]) -h (?<hora>[0-9][0-9]:[0-9][0-9]$)";
+
+                        if (Regex.IsMatch(arg, patternRequest, RegexOptions.IgnoreCase))
+                        {
                             Regex rx = new Regex(patternRequest, RegexOptions.Compiled | RegexOptions.IgnoreCase);
                             MatchCollection matches = rx.Matches(arg);
 
                             foreach (Match match in matches)
                             {
                                 GroupCollection groups = match.Groups;
-                                Console.WriteLine(groups["nome"].Value);
-                                Console.WriteLine(groups["data"].Value);
-                                Console.WriteLine(groups["hora"].Value);
 
-                                string[] d = groups["data"].Value.Split('-');
+                                string[] d = groups["data"].Value.Split('/');
+                                string[] h = groups["hora"].Value.Split(':');
+                                int i = aulas.Count + 1;
+                                string ptname = groups["nome"].Value;
 
-                                int[] i = new int[d.Length];
+                                DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
 
-                                for (int d = 0; d < length; d++)
+                                Console.WriteLine($"DATA GERADA: {t}");
+                                Console.WriteLine($"VALOR A SER GRAVADO NO DIC {i}");
+                                Console.WriteLine($"NOME DO PT {groups["nome"].Value}");
+
+                                Aula a = new Aula(ptname, currentUser, t, Utilitarios.RandomizarAulaAceite(), i);
+                                /*
+                                a.PersonalTrainerName = ptname;
+                                a.UserName = currentUser;
+                                a.DataAula = t;
+                                a.AulaAceite = Utilitarios.RandomizarAulaAceite();
+                                a.NumeroDoPedido = i;
+                                */
+                                Console.WriteLine($"{a.PersonalTrainerName} // {a.NumeroDoPedido} // {a.DataAula}");
+
+                                aulas.Add(i, a);
+
+                                foreach (KeyValuePair<int, Aula> al in aulas)
                                 {
-
+                                    //if(a.UserName.Equals(currentUser) && a.AulaAceite)
+                                    //{
+                                    Console.WriteLine($"{al.Key} - {al.Value.PersonalTrainerName} - {al.Value.DataAula} - {al.Value.PersonalTrainerName}");
+                                    //}
                                 }
-                                IntroduzirPedido(groups["nome"].Value, new DateTime((groups["data"].Value.Split(':'));
+                                return;
                             }
-                        }
-                        else
-                        {
                             Utilitarios.AjudaInfo();
-                        }
-                    };break;
-
-                             
-                         
-
-
-
-
-
-
-
-
-                        /*
-                        if (tmp[1] == "-n" && tmp[3] == "-d" && tmp[5] == "-h" && tmp.Length == 7)
-                        {
-                            DateTime dia, hora, all = new DateTime();
-                            string n = tmp[2];
-                            bool d = DateTime.TryParse(tmp[4], out dia);
-                            if (!d)
-                            {
-                                Console.WriteLine("Dia introduzido no formato errado. Use \"help\" na consola para obter ajuda\n");
-                                break;
-                            }
-                            bool h = DateTime.TryParse(tmp[6], out hora);
-                            if (!h)
-                            {
-                                Console.WriteLine("Hora introduzida no formato errado. Use \"help\" na consola para obter ajuda\n");
-                                break;
-                            }
-
-                            all = dia.Date.Add(hora.TimeOfDay);
-
-                            IntroduzirPedido(n, all);
                             return;
-                        
                         }
                         else
+                        {
                             Utilitarios.AjudaInfo();
-                    }
-                    break;*/
+                        }
+                    }; break;
+
+                case "cancel":
+                    {
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Aula.CancelarPedido(arg);
+                    } break;
+
+                case "requests":
+                    {
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        /*foreach (Aula a in aulas)
+                        {
+                            //if(a.UserName.Equals(currentUser) && a.AulaAceite)
+                            //{
+                                Console.WriteLine($"{a.NumeroDoPedido} - {a.DataAula} - {a.PersonalTrainerName}");
+                            //}
+                        }*/
+
+                    } break;
 
                 default:
                     {
@@ -227,11 +236,11 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             exitFlag = false;
         }
 
+
         internal static void LimparConsola()
         {
             Console.Clear();
         }
-
 
 
         internal static void VerPedido()
@@ -242,6 +251,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         internal static void IntroduzirPedido(string nome, DateTime data)
         {
+            //Aula a = new Aula();
+            /*
             if(currentUser.Equals("RSGym"))
             {
                 Console.WriteLine("Utilizador não autorizado a realizar a operação");
@@ -253,17 +264,11 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             foreach (KeyValuePair<string, List<DateTime>> item in personalTrainers)
             {
-                Console.WriteLine($"{item.Key}");
-                //Console.ReadLine();
-                //Console.WriteLine(nome);
-               // Console.WriteLine((item.Key.Equals(nome)));
                 if(item.Key.Equals(nome))
                 {
                     
                     foreach (DateTime d in item.Value)
                     {
-                        Console.WriteLine($"{d} , {data}");
-
                         if (data.Equals(d))
                         {
                             Console.WriteLine($"{item.Key} com este horario ocupado. Por favor selecionar outro dia e hora\n");
@@ -280,13 +285,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         
                             else
                             {
-                                int num = requests.Count;
+
                                 tempList = item.Value;
 
                                 personalTrainers.Remove(nome);
                                 tempList.Add(data);
                                 personalTrainers.Add(nome, tempList);
-                                requests.Add(num + 1, currentUser);
+
 
                                 Console.WriteLine($"Aula marcada com sucesso\n");
                                 return;
@@ -298,8 +303,9 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
 
             Console.WriteLine($"O personal trainer com o nome {nome} não existe\n");
+        }*/
+
+
         }
-
-
     }
 }
