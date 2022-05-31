@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RS6_OOP_P1_2022_05_JoaoMariz
 {
-    class Autenticacao
+    internal class Autenticacao
     {
         // Variavel com as informações de Login dos utilizadores
         // Ver se é melhor fazer nova classe
@@ -16,7 +16,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             {"MRZ", "123asd32"}
         };
 
-        internal void Login(string user, string pass)
+        internal static void Login(string user, string pass)
         {
             foreach(KeyValuePair<string,string> i in users)
             {
@@ -26,6 +26,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     Console.WriteLine("Pressionar qualquer tecla para continuar");
                     Console.ReadKey();
                     RSGym.currentUser = user;
+                    break;
                 }
 
                 else

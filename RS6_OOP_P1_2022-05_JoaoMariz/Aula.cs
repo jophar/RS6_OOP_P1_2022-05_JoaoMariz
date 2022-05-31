@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 namespace RS6_OOP_P1_2022_05_JoaoMariz
 {
-    class Program
+    internal class Aula
     {
-        static void Main(string[] args)
+        internal Aula()
         {
 
-            do
-            {
-                RSGym.IniciarConsola();
-            }
-
-            while (RSGym.exitFlag);
         }
     }
 }

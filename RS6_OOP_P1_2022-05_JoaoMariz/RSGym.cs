@@ -17,7 +17,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal int NumeroDoPedido { get; set; }
 
         // Construtor vazio
-        internal RSGym()
+      /*  internal RSGym()
         {
             string PersonalTrainerName = string.Empty;
             string UserName = string.Empty;
@@ -25,7 +25,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             bool LogInCorrecto = false;
             bool AulaAceite = false;
             int NumeroDoPedido = 0;
-        }
+        }*/
 
         // Construtor completo
         internal RSGym(string pt, string un, DateTime d, bool log, bool aa, int num)
@@ -44,7 +44,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal static string currentUser = "RSGym";
         internal static bool exitFlag = true;
 
-        // Variavel helpMenu.
+        // Variavel helpMenu com a informação de todos os comandos.
         // Serve tambem para verificar se a opção introduzida é correcta
         private static Dictionary<string, string> helpMenu = new Dictionary<string, string>
         {
@@ -70,9 +70,9 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         // Lista com os nomes dos PT's e Datas registadas entretanto
         private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
         {
-            { "Maria", new List<DateTime>() { DateTime.MinValue } },
-            { "José", new List<DateTime>() { DateTime.MinValue } },
-            { "MeninoJesus", new List<DateTime>() { DateTime.MinValue } }
+            { "Maria", new List<DateTime>() },
+            { "José", new List<DateTime>() },
+            { "MeninoJesus", new List<DateTime>() }
         };
 
         // Variavel com os requests feitos
@@ -94,14 +94,43 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal static void IniciarConsola()
         {
             string arg = string.Empty;
-            Console.Write($"{currentUser} >");
+            Console.Write($"{currentUser} > ");
             arg = Console.ReadLine();
             ParseArgument(arg);
         }
 
         private static void ParseArgument(string arg)
         {
+            string[] tmp = arg.Split(' ');
 
+
+
+            switch (tmp[0])
+            {
+                case "help": Ajuda(); break;
+                case "exit": Sair(); break;
+                case "clear": LimparConsola(); break;
+                case "login":
+                    {
+                        Console.WriteLine($"{tmp[0]} - {tmp[1]} - {tmp[2]} - {tmp[3]} - {tmp[4]}\n");
+                        if(tmp[1] == "-u" && tmp[3] == "-p")
+                            Autenticacao.Login(tmp[2], tmp[4]);
+                        else
+                        {
+                            Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda");
+                            Console.WriteLine("Pressione qualquer tecla para continuar...");
+                            Console.ReadKey();
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda");
+                        Console.WriteLine("Pressione qualquer tecla para continuar...");
+                        Console.ReadKey();
+                    }
+                    break;
+            }
         }
 
         internal static void Sair()
@@ -161,10 +190,14 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         
                             else
                             {
+                                int num = requests.Count;
                                 tempList = item.Value;
+
                                 personalTrainers.Remove(nome);
                                 tempList.Add(data);
                                 personalTrainers.Add(nome, tempList);
+                                requests.Add(num + 1, currentUser);
+
                                 Console.WriteLine($"Aula marcada com sucesso");
                                 Console.WriteLine("Pressionar qualquer tecla para continuar");
                                 Console.ReadKey();
