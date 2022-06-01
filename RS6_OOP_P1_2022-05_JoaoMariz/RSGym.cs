@@ -34,38 +34,18 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal static bool exitFlag = true;
 
 
-        /* 
-         * Variavel helpMenu com a informação de todos os comandos.
-         * Usada a flag "readonly" dado que não é para alterar o conteudo.
-         */
-
-        private static readonly Dictionary<string, string> helpMenu = new Dictionary<string, string>
-        {
-            {"help" ,       "Lista este menu de ajuda"},
-            {"exit" ,       "Sair da aplicação"},
-            {"clear",       "Limpa a consola"},
-            {"login",       "Fazer login na aplicação.\n" +
-                            "\t\t Utilização: login -u {username} -p {password}"},
-            {"request",     "Fazer o pedido do PT indicando: nome do PT, dia e horas.\n" +
-                            "\t\t Utilização: request -n {nome} -d {dd/mm/yyyy} -h {hh:mm}"},
-            {"cancel",      "Anular um pedido\n" +
-                            "\t\t Utilização: cancel -r {nº do pedido}"},
-            {"finish",      "Dar informação que a aula foi concluida\n" +
-                            "\t\t Utilização: finish -r {nº pedido}"},
-            {"message",     "Mensagem a informar o motivo da não conclusão da aula\n" +
-                            "\t\t Utilização: message -r {nº pedido} -s {assunto}"},
-            {"myrequest",   "Lista o pedido efetuado\n" +
-                            "\t\t Utilização: myrequest -r {nº pedido}"},
-            {"requests",    "Listar todos os pedidos efetuados\n" +
-                            "\t\t Utilização: requests -a" }
-        };
-
-
         /*
          * Lista que vai receber todas as aulas introduzidas até ao momento
+         * É carregado o "dummy value" para 0 por dois motivos:
+         *  - é feita uma verificação no código para saber qual é o ultimo valor presente para
+         *    acrescentar 1 e gravar essa informação. Se inicializar o Dicionário vazio,
+         *    o programa lança uma exepção.
          */
 
-        internal static Dictionary<int, Aula> aulas = new Dictionary<int, Aula>();
+        internal static Dictionary<int, Aula> aulas = new Dictionary<int, Aula>()
+        {
+            { 0, new Aula() }
+        };
 
 
         private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
@@ -81,12 +61,25 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         // Se necessário adicionar mais item's, já fica formatado
         internal static void Ajuda()
         {
-            foreach (KeyValuePair<string, string> item in helpMenu)
+            if (currentUser.Equals("RSGym"))
             {
-                if (item.Key.Length < 8)
-                    Console.WriteLine($"{item.Key}\t\t {item.Value}\n");
-                else
-                    Console.WriteLine($"{item.Key}\t {item.Value}\n");
+                foreach (KeyValuePair<string, string> item in Utilitarios.helpMenuNotLogged)
+                {
+                    if (item.Key.Length < 8)
+                        Console.WriteLine($"{item.Key}\t\t {item.Value}\n");
+                    else
+                        Console.WriteLine($"{item.Key}\t {item.Value}\n");
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<string, string> item in Utilitarios.helpMenu)
+                {
+                    if (item.Key.Length < 8)
+                        Console.WriteLine($"{item.Key}\t\t {item.Value}\n");
+                    else
+                        Console.WriteLine($"{item.Key}\t {item.Value}\n");
+                }
             }
         }
 
@@ -155,35 +148,26 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                                 string[] d = groups["data"].Value.Split('/');
                                 string[] h = groups["hora"].Value.Split(':');
-                                int i = aulas.Count + 1;
+                                int i = aulas.Keys.Last() +1;
                                 string ptname = groups["nome"].Value;
 
                                 DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
 
-                                Console.WriteLine($"DATA GERADA: {t}");
-                                Console.WriteLine($"VALOR A SER GRAVADO NO DIC {i}");
-                                Console.WriteLine($"NOME DO PT {groups["nome"].Value}");
-
                                 Aula a = new Aula(ptname, currentUser, t, Utilitarios.RandomizarAulaAceite(), i);
-                                /*
-                                a.PersonalTrainerName = ptname;
-                                a.UserName = currentUser;
-                                a.DataAula = t;
-                                a.AulaAceite = Utilitarios.RandomizarAulaAceite();
-                                a.NumeroDoPedido = i;
-                                */
-                                Console.WriteLine($"{a.PersonalTrainerName} // {a.NumeroDoPedido} // {a.DataDaAula}");
 
-                                aulas.Add(i, a);
-
-                                foreach (KeyValuePair<int, Aula> al in aulas)
+                                if(a.AulaAceite==true)
                                 {
-                                    //if(a.UserName.Equals(currentUser) && a.AulaAceite)
-                                    //{
-                                    Console.WriteLine($"{al.Key} - {al.Value.PersonalTrainerName} - {al.Value.DataDaAula} - {al.Value.PersonalTrainerName}");
-                                    //}
+                                    Utilitarios.ImprimirAula(a);
+                                    aulas.Add(i, a);
+                                    return;
                                 }
-                                return;
+                                else
+                                {
+                                    Console.WriteLine("Informamos que o ginasio não aceitou o pedido");
+                                    return;
+                                }
+                                
+
                             }
                             Utilitarios.AjudaInfo();
                             return;
@@ -213,16 +197,37 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        /*foreach (Aula a in aulas)
+                        foreach(KeyValuePair<int,Aula> a in aulas)
                         {
-                            //if(a.UserName.Equals(currentUser) && a.AulaAceite)
-                            //{
-                                Console.WriteLine($"{a.NumeroDoPedido} - {a.DataAula} - {a.PersonalTrainerName}");
-                            //}
-                        }*/
+                            if(a.Value.UserName.Equals(currentUser) && a.Value.AulaAceite)
+                            {
+                                Utilitarios.ImprimirAula(a.Value);
+                            }
+                        }
 
                     } break;
 
+                case "finish":
+                    {
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Aula.ConcluirAula(arg);
+
+                    }break;
+                case "message":
+                    {
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Aula.InserirMensagem(arg);
+                    } break;
                 default:
                     {
                         Utilitarios.AjudaInfo();

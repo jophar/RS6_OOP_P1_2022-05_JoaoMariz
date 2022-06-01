@@ -51,7 +51,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             Mensagem = msg;
         }
 
-        internal static void Request() 
+        internal static void Request()
         { }
 
         internal static void CancelarPedido(string a)
@@ -71,9 +71,9 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     bool b = int.TryParse(groups["pedido"].Value, out pedido);
                     if (b)
                     {
-                        foreach (KeyValuePair<int,Aula> aula in RSGym.aulas)
+                        foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
                         {
-                            if(aula.Value.NumeroDoPedido == pedido)
+                            if (aula.Value.NumeroDoPedido == pedido)
                             {
                                 RSGym.aulas.Remove(pedido);
                                 Console.WriteLine($"O pedido numero {pedido} foi eliminado\n");
@@ -86,12 +86,89 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 }
 
             }
+            else
+            {
+                Utilitarios.AjudaInfo();
+            }
         }
 
-        internal static void ConcluirAula()
-        { }
+        internal static void ConcluirAula(string a)
+        {
+            int pedido = 0;
 
-        internal static void InserirMensagem()
-        { }
+            string patternFinish = @"^finish -r (?<pedido>[0-9]+)";
+
+            if (Regex.IsMatch(a, patternFinish, RegexOptions.IgnoreCase))
+            {
+                Regex rx = new Regex(patternFinish, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                MatchCollection matches = rx.Matches(a);
+
+                foreach (Match match in matches)
+                {
+                    GroupCollection groups = match.Groups;
+                    bool b = int.TryParse(groups["pedido"].Value, out pedido);
+
+                    if (b)
+                    {
+                        foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
+                        {
+                            if (aula.Value.NumeroDoPedido == pedido)
+                            {
+                                aula.Value.Mensagem = $"Aula concluída {DateTime.Now}";
+                                Console.WriteLine(aula.Value.Mensagem);
+                                return;
+                            }
+                        }
+
+                        Console.WriteLine("Pedido não encontrado");
+                    }
+
+                }
+            }
+
+            Utilitarios.AjudaInfo();
+        }
+
+
+        internal static void InserirMensagem(string s) 
+        {
+            int pedido = 0;
+
+            string patternMessage = @"^message -r (?<pedido>[0-9]+) -s (?<mensagem>[A-zÀ-ú0-9]+)";
+
+            if (Regex.IsMatch(s, patternMessage, RegexOptions.IgnoreCase))
+            {
+                Regex rx = new Regex(patternMessage, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                MatchCollection matches = rx.Matches(s);
+
+                foreach (Match match in matches)
+                {
+                    GroupCollection groups = match.Groups;
+                    bool b = int.TryParse(groups["pedido"].Value, out pedido);
+
+                    if (b)
+                    {
+                        foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
+                        {
+                            if (aula.Value.NumeroDoPedido == pedido)
+                            {
+                                aula.Value.Mensagem = $"{groups["mensagem"].Value} - {DateTime.Now}";
+                                Console.WriteLine(aula.Value.Mensagem);
+                                return;
+                            }
+                        }
+
+                        Console.WriteLine("Pedido não encontrado");
+                        return;
+                    }
+
+                }
+            }
+            else
+            {
+                Utilitarios.AjudaInfo();
+            }
+        } 
+    
     }
 }

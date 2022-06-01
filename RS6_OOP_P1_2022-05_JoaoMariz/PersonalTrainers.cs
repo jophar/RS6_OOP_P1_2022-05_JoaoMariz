@@ -18,14 +18,14 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         internal PersonalTrainers()
         {
-            string Nome = string.Empty;
-            List<DateTime> Horarios = new List<DateTime>();
+            Nome = string.Empty;
+            Horarios = new List<DateTime>();
         }
 
         internal PersonalTrainers(string n, List<DateTime> d)
         {
-            string Nome = n;
-            List<DateTime> Horarios = d;
+            Nome = n;
+            Horarios = d;
         }
     }
 }
