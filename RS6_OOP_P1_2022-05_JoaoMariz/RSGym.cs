@@ -172,7 +172,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                                 a.AulaAceite = Utilitarios.RandomizarAulaAceite();
                                 a.NumeroDoPedido = i;
                                 */
-                                Console.WriteLine($"{a.PersonalTrainerName} // {a.NumeroDoPedido} // {a.DataAula}");
+                                Console.WriteLine($"{a.PersonalTrainerName} // {a.NumeroDoPedido} // {a.DataDaAula}");
 
                                 aulas.Add(i, a);
 
@@ -180,7 +180,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                                 {
                                     //if(a.UserName.Equals(currentUser) && a.AulaAceite)
                                     //{
-                                    Console.WriteLine($"{al.Key} - {al.Value.PersonalTrainerName} - {al.Value.DataAula} - {al.Value.PersonalTrainerName}");
+                                    Console.WriteLine($"{al.Key} - {al.Value.PersonalTrainerName} - {al.Value.DataDaAula} - {al.Value.PersonalTrainerName}");
                                     //}
                                 }
                                 return;

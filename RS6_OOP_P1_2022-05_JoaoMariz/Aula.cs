@@ -16,39 +16,39 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
     {
         internal string PersonalTrainerName { get; set; }
         internal string UserName { get; set; }
-        internal DateTime DataAula { get; set; }
+        internal DateTime DataDaAula { get; set; }
         internal bool AulaAceite { get; set; }
         internal int NumeroDoPedido { get; set; }
         internal string Mensagem { get; set; }
 
         internal Aula()
         {
-            string PersonalTrainerName = string.Empty;
-            string UserName = string.Empty;
-            DateTime DataDaAula = DateTime.MinValue;
-            bool AulaAceite = true;
-            string Mensagem = string.Empty;
-            int NumeroDoPedido = 0;
+            PersonalTrainerName = string.Empty;
+            UserName = string.Empty;
+            DataDaAula = new DateTime();
+            AulaAceite = true;
+            Mensagem = string.Empty;
+            NumeroDoPedido = 0;
         }
 
         internal Aula(string pt, string un, DateTime d, bool aa, int num)
         {
-            string PersonalTrainerName = pt;
-            string UserName = un;
-            DateTime DataDaAula = d;
-            bool AulaAceite = aa;
-            int NumeroDoPedido = num;
-            string Mensagem = string.Empty;
+            PersonalTrainerName = pt;
+            UserName = un;
+            DataDaAula = d;
+            AulaAceite = aa;
+            NumeroDoPedido = num;
+            Mensagem = string.Empty;
         }
 
         internal Aula(string pt, string un, DateTime d, bool aa, int num, string msg)
         {
-            string PersonalTrainerName = pt;
-            string UserName = un;
+            PersonalTrainerName = pt;
+            UserName = un;
             DateTime DataDaAula = d;
-            bool AulaAceite = aa;
-            int NumeroDoPedido = num;
-            string Mensagem = msg;
+            AulaAceite = aa;
+            NumeroDoPedido = num;
+            Mensagem = msg;
         }
 
         internal static void Request() 
