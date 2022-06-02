@@ -135,47 +135,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        string patternRequest = @"^request -n (?<nome>[A-zÀ-ú0-9]+) -d (?<data>[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]) -h (?<hora>[0-9][0-9]:[0-9][0-9]$)";
-
-                        if (Regex.IsMatch(arg, patternRequest, RegexOptions.IgnoreCase))
-                        {
-                            Regex rx = new Regex(patternRequest, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                            MatchCollection matches = rx.Matches(arg);
-
-                            foreach (Match match in matches)
-                            {
-                                GroupCollection groups = match.Groups;
-
-                                string[] d = groups["data"].Value.Split('/');
-                                string[] h = groups["hora"].Value.Split(':');
-                                int i = aulas.Keys.Last()+1;
-                                string ptname = groups["nome"].Value;
-
-                                DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
-
-                                Aula a = new Aula(ptname, currentUser, t, Utilitarios.RandomizarAulaAceite(), i);
-
-                                if(a.AulaAceite==true)
-                                {
-                                    Utilitarios.ImprimirAula(a);
-                                    aulas.Add(i, a);
-                                    return;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Informamos que o ginasio não aceitou o pedido");
-                                    return;
-                                }
-                                
-
-                            }
-                            Utilitarios.AjudaInfo();
-                            return;
-                        }
-                        else
-                        {
-                            Utilitarios.AjudaInfo();
-                        }
+                        Aula.Request(arg);
                     }; break;
 
                 case "cancel":
