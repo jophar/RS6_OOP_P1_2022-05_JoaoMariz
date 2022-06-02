@@ -129,6 +129,41 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             Utilitarios.AjudaInfo();
         }
 
+        internal static void MyRequest(string arg)
+        {
+            int pedido = 0;
+
+            string patternMyRequest = @"^myrequest -r (?<pedido>[0-9]+)";
+
+            if (Regex.IsMatch(arg, patternMyRequest, RegexOptions.IgnoreCase))
+            {
+                Regex rx = new Regex(patternMyRequest, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                MatchCollection matches = rx.Matches(arg);
+
+                foreach (Match match in matches)
+                {
+                    GroupCollection groups = match.Groups;
+                    bool b = int.TryParse(groups["pedido"].Value, out pedido);
+
+                    if (b)
+                    {
+                        foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
+                        {
+                            if (aula.Value.NumeroDoPedido == pedido)
+                            {
+                                Utilitarios.ImprimirAula(aula.Value);
+                                return;
+                            }
+                        }
+
+                        Console.WriteLine("Pedido não encontrado");
+                        return;
+                    }
+                }
+            }
+
+            Utilitarios.AjudaInfo();
+        }
 
         internal static void InserirMensagem(string s) 
         {

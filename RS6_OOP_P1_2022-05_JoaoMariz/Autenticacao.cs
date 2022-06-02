@@ -45,5 +45,14 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             Console.WriteLine("Username ou Password errados, por favor tente novamente\n");
         }
+
+        internal static void LoginCheck()
+        {
+            if (RSGym.currentUser.Equals("RSGym"))
+            {
+                Console.WriteLine("Por favor efetue login na consola\n");
+                return;
+            }
+        }
     }
 }

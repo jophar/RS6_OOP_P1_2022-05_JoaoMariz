@@ -21,7 +21,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * internal dado que é manupulado pela classe Autenticação
          */
 
-        internal static string currentUser = "JMF";
+        internal static string currentUser = "RSGym";
 
 
         /*
@@ -148,7 +148,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                                 string[] d = groups["data"].Value.Split('/');
                                 string[] h = groups["hora"].Value.Split(':');
-                                int i = aulas.Keys.Last() +1;
+                                int i = aulas.Keys.Last()+1;
                                 string ptname = groups["nome"].Value;
 
                                 DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
@@ -218,6 +218,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         Aula.ConcluirAula(arg);
 
                     }break;
+
                 case "message":
                     {
                         if (currentUser.Equals("RSGym"))
@@ -228,6 +229,19 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                         Aula.InserirMensagem(arg);
                     } break;
+
+                case "myrequest":
+                    {
+                        if (currentUser.Equals("RSGym"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Aula.MyRequest(arg);
+
+                    } break;
+
                 default:
                     {
                         Utilitarios.AjudaInfo();
@@ -245,72 +259,6 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal static void LimparConsola()
         {
             Console.Clear();
-        }
-
-
-        internal static void VerPedido()
-        { }
-
-        internal static void ListarPedidos()
-        { }
-
-        internal static void IntroduzirPedido(string nome, DateTime data)
-        {
-            //Aula a = new Aula();
-            /*
-            if(currentUser.Equals("RSGym"))
-            {
-                Console.WriteLine("Utilizador não autorizado a realizar a operação");
-                Console.WriteLine("Por favor efetuar login na consola\n");
-                return;
-            }
-
-            List<DateTime> tempList = new List<DateTime>();
-
-            foreach (KeyValuePair<string, List<DateTime>> item in personalTrainers)
-            {
-                if(item.Key.Equals(nome))
-                {
-                    
-                    foreach (DateTime d in item.Value)
-                    {
-                        if (data.Equals(d))
-                        {
-                            Console.WriteLine($"{item.Key} com este horario ocupado. Por favor selecionar outro dia e hora\n");
-                            return;
-                        }
-                        else
-                        {
-                            if (d.Hour < 9 || d.Hour > 20)
-                            {
-                                Console.WriteLine("Marcação fora do horario permitido");
-                                Console.WriteLine("Por favor introduzir um horario entre as 9:00 e as 20:00\n");
-                                return;
-                            }
-                        
-                            else
-                            {
-
-                                tempList = item.Value;
-
-                                personalTrainers.Remove(nome);
-                                tempList.Add(data);
-                                personalTrainers.Add(nome, tempList);
-
-
-                                Console.WriteLine($"Aula marcada com sucesso\n");
-                                return;
-                            }   
-                        }
-                    }
-                }
-
-            }
-
-            Console.WriteLine($"O personal trainer com o nome {nome} não existe\n");
-        }*/
-
-
         }
     }
 }

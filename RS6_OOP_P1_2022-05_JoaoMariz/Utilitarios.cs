@@ -36,6 +36,12 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         };
 
 
+        /* 
+        * Variavel helpMenuNotLogged com a informação de todos os comandos disponíveis
+        * a um utilizador que não se encontre autenticado na aplicação.
+        * Usada a flag "readonly" dado que não é para alterar o conteudo.
+        */
+
         internal static readonly Dictionary<string, string> helpMenuNotLogged = new Dictionary<string, string>
         {
             {"help" ,       "Lista este menu de ajuda"},
@@ -45,11 +51,21 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             "\t\t Utilização: login -u {username} -p {password}"}
         };
 
+
+        /*
+         * Metodo para enviar mensagem de erro quando a sintaxe de um comando não é
+         * reconhecida.
+         */
+
         internal static void AjudaInfo()
         {
             Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda\n");
         }
 
+
+        /*
+         * Metodo para randomizar se a aula é aceite ou não pelo ginásio
+         */
         internal static bool RandomizarAulaAceite()
         {
             Random r = new Random();
@@ -61,13 +77,18 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 return false;
         }
 
+
+        /*
+         * Metodo utilitário para imprimir uma aula recebendo-a como argumento.
+         * Pode ter diversas aplicações
+         */
         internal static void ImprimirAula(Aula a)
         {
             Console.WriteLine("-- Detalhe da aula --");
             Console.WriteLine($"\tNumero do pedido: {a.NumeroDoPedido}");
             Console.WriteLine($"\tNome do PT: {a.PersonalTrainerName}");
-            Console.WriteLine($"\tHora da Aula: {a.DataDaAula.Hour}");
-            Console.WriteLine($"\tData da Aula: {a.DataDaAula.Date}");
+            Console.WriteLine($"\tHora da Aula: {a.DataDaAula.ToShortTimeString()}");
+            Console.WriteLine($"\tData da Aula: {a.DataDaAula.ToShortDateString()}");
             Console.WriteLine($"\tMensagem: {a.Mensagem}");
         }
     }
