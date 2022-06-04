@@ -11,21 +11,24 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
      * sobre os nomes dos PT's e Horarios disponíveis
      */
 
-    internal class PersonalTrainers
+    internal class PersonalTrainer
     {
+        internal string Id { get; set; }
         internal string Nome { get; set; }
         internal List<DateTime> Horarios { get; set; }
 
-        internal PersonalTrainers()
+        internal PersonalTrainer()
         {
+            Id = "0";
             Nome = string.Empty;
             Horarios = new List<DateTime>();
         }
 
-        internal PersonalTrainers(string n, List<DateTime> d)
+        internal PersonalTrainer(string id, string nome, List<DateTime> data)
         {
-            Nome = n;
-            Horarios = d;
+            Id = id;    
+            Nome = nome;
+            Horarios = data;
         }
     }
 }

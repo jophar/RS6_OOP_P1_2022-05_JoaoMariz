@@ -22,7 +22,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         private readonly static Dictionary<string, string> users = new Dictionary<string, string>
         {
             {"JMF", "1a2b3c4d"},
-            {"MRZ", "123asd32"}
+            {"M", "123asd32"}
         };
 
         /* 
@@ -33,17 +33,30 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          */
         internal static void Login(string user, string pass)
         {
-            foreach(KeyValuePair<string,string> i in users)
+            foreach(User i in RSGym.utilizadores)
             {
-                if(i.Key == user && i.Value == pass)
+                if(i.UserName == user && i.PassWord == pass)
                 {
-                    Console.WriteLine($"{user} autenticado com sucesso\n");
+                    string authUser = $"{user} autenticado com sucesso\n";
+                    Console.WriteLine($"\n{new String('*', authUser.Length-1)}");
+                    Console.WriteLine(authUser);
+                    Console.WriteLine($"{new String('*', authUser.Length-1)}\n");
                     RSGym.currentUser = user;
                     return;
                 }
             }
 
             Console.WriteLine("Username ou Password errados, por favor tente novamente\n");
+        }
+
+        internal static void Logout()
+        {
+            if (RSGym.currentUser != "RSGymPT")
+                RSGym.currentUser = "RSGymPT";
+            else
+            {
+                Console.Write("Nenhum utilizador com login efetuado\n");
+            }
         }
     }
 }

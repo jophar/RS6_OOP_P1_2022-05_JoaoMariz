@@ -84,7 +84,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          */
         internal static void ImprimirAula(Aula a)
         {
-            Console.WriteLine("-- Detalhe da aula --");
+            Console.WriteLine("\n-- Detalhe da aula --");
             Console.WriteLine($"\tNumero do pedido: {a.NumeroDoPedido}");
             Console.WriteLine($"\tNome do PT: {a.PersonalTrainerName}");
             Console.WriteLine($"\tHora da Aula: {a.DataDaAula.ToShortTimeString()}");

@@ -10,6 +10,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
     /*
      * Classe RSGym que contem o objecto CLI e os metodos 
      * para as opções do CLI
+     * 
      */
 
     class RSGym
@@ -19,9 +20,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * Por default está gravado o RSGym e que só irá permitir registos
          * caso seja diferente deste valor
          * internal dado que é manupulado pela classe Autenticação
+         * 
          */
 
-        internal static string currentUser = "RSGym";
+        internal static string currentUser = "RSGymPT";
 
 
         /*
@@ -29,6 +31,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * Caso seja evocado o metodo Sair(), altera a flag e o 
          * programa termina.
          * internal dado que é lido o valor no Program.cs
+         * 
          */
 
         internal static bool exitFlag = true;
@@ -40,6 +43,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          *  - é feita uma verificação no código para saber qual é o ultimo valor presente para
          *    acrescentar 1 e gravar essa informação. Se inicializar o Dicionário vazio,
          *    o programa lança uma exepção.
+         *    
          */
 
         internal static Dictionary<int, Aula> aulas = new Dictionary<int, Aula>()
@@ -48,11 +52,37 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         };
 
 
-        private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
+        /*
+         * Varável para registar o numero sequencial da aula dado que na escrita do Dictionary
+         * pode ocorrer a sobreposição de keys e o programa da exepção.
+         * 
+         */
+
+        internal static int aulaNumero = 0;
+
+        /*
+         * Criação do Objecto com os PT's usando o construtor completo.
+         * 
+         */
+
+        internal static List<PersonalTrainer> personalTrainers = new List<PersonalTrainer>()
         {
-            { "Maria", new List<DateTime>() { DateTime.MinValue } },
-            { "José", new List<DateTime>() { DateTime.MinValue } },
-            { "MeninoJesus", new List<DateTime>() { DateTime.MinValue } }
+            new PersonalTrainer("1", "Maria", new List<DateTime> { DateTime.Now}),
+            new PersonalTrainer("2", "José", new List<DateTime> { DateTime.Now}),
+            new PersonalTrainer("3", "Pedro", new List<DateTime> { DateTime.Now}),
+        };
+
+
+        /* 
+         * Criação do Objecto com os Utilizadores do programa.
+         * Permite adicionar mais utilizadores (futuramente) através de um backoffice
+         * 
+         */
+
+        internal static List<User> utilizadores = new List<User>()
+        {
+            new User("1", "JMF", "João Mariz", "1a2b3c4d"),
+            new User("2", "Mariz", "Mariz", "123asd32")
         };
 
 
@@ -61,7 +91,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         // Se necessário adicionar mais item's, já fica formatado
         internal static void Ajuda()
         {
-            if (currentUser.Equals("RSGym"))
+            if (currentUser.Equals("RSGymPT"))
             {
                 foreach (KeyValuePair<string, string> item in Utilitarios.helpMenuNotLogged)
                 {
@@ -146,7 +176,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        Aula.CancelarPedido(arg);
+                        Aula.Cancel(arg);
                     } break;
 
                 case "requests":
@@ -156,14 +186,17 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
+                        /*
+                        var minhasAulas = aulas
+                            .Where(c => c.Value.UserName.Equals(currentUser) && c.Value.AulaAceite)
+                            .OrderBy(c => c.Key);
 
-                        foreach(KeyValuePair<int,Aula> a in aulas)
+                        foreach (var i in minhasAulas)
                         {
-                            if(a.Value.UserName.Equals(currentUser) && a.Value.AulaAceite)
-                            {
-                                Utilitarios.ImprimirAula(a.Value);
-                            }
-                        }
+                            Utilitarios.ImprimirAula(i.Value);
+                        }*/
+
+                        Aula.Requests(arg);
 
                     } break;
 
@@ -175,7 +208,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        Aula.ConcluirAula(arg);
+                        Aula.Finish(arg);
 
                     }break;
 
@@ -187,7 +220,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        Aula.InserirMensagem(arg);
+                        Aula.Message(arg);
                     } break;
 
                 case "myrequest":
