@@ -67,7 +67,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                     string[] d = groups["data"].Value.Split('/');
                     string[] h = groups["hora"].Value.Split(':');
-                    int i = RSGym.aulaNumero + 1;
+                    string n = groups["nome"].Value;
+                    int i = RSGym.aulaNumero;
                     string ptname = groups["nome"].Value;
                     
                     try
@@ -75,15 +76,27 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
                         Aula a = new Aula(ptname, RSGym.currentUser, t, Utilitarios.RandomizarAulaAceite(), i);
 
+                        var ptCheck = RSGym.personalTrainers
+                                        .Where(c => c.Nome.Equals(n));
+
+                        if(!ptCheck.Any())
+                        {
+                            Console.WriteLine($"Lamentamos mas o PT com nome {n} não existe!\n");
+                            return;
+                        }
+
                         if (a.AulaAceite == true)
                         {
                             Utilitarios.ImprimirAula(a);
                             RSGym.aulas.Add(i, a);
+                            RSGym.aulasTeste.Add(a);
                             RSGym.aulaNumero++;
+                            Console.WriteLine("Aula introduzida e aceite pelo ginásio");
                             return;
                         }
+
                         else
-                        {
+                        {   
                             Console.WriteLine("Lamentamos mas o ginasio não aceitou o seu pedido");
                             return;
                         }
@@ -208,7 +221,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     {
                         foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
                         {
-                            if (aula.Value.NumeroDoPedido == pedido && aula.Value.UserName.Equals(RSGym.currentUser))
+                            if (aula.Key == pedido && aula.Value.UserName.Equals(RSGym.currentUser))
                             {
                                 Utilitarios.ImprimirAula(aula.Value);
                                 return;

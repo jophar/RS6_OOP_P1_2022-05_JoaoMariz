@@ -58,7 +58,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * 
          */
 
-        internal static int aulaNumero = 0;
+        internal static int aulaNumero = 1;
 
         /*
          * Criação do Objecto com os PT's usando o construtor completo.
@@ -129,11 +129,22 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             switch (tmp[0])
             {
-                case "help": Ajuda(); break;
-                case "exit": Sair(); break;
-                case "clear": LimparConsola(); break;
+                case "help":
+                    {
+                        Ajuda();
+                    } break;
 
-                case "login":
+                case "exit":
+                    {
+                        Sair();
+                    } break;
+
+                case "clear":
+                    {
+                        LimparConsola();
+                    } break;
+
+                case "login": // Se calhar ainda dá para melhorar o metodo
                     {
                         string login, pass;
                         string patternLogin = @"^login -u (?<user>[a-zA-Z0-9]+) -p (?<pass>[a-zA-Z0-9]+)";
@@ -159,7 +170,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "request":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
@@ -170,7 +181,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "cancel":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
@@ -181,20 +192,11 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "requests":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
-                        /*
-                        var minhasAulas = aulas
-                            .Where(c => c.Value.UserName.Equals(currentUser) && c.Value.AulaAceite)
-                            .OrderBy(c => c.Key);
-
-                        foreach (var i in minhasAulas)
-                        {
-                            Utilitarios.ImprimirAula(i.Value);
-                        }*/
 
                         Aula.Requests(arg);
 
@@ -202,7 +204,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "finish":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
@@ -210,22 +212,23 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                         Aula.Finish(arg);
 
-                    }break;
+                    } break;
 
                 case "message":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
 
                         Aula.Message(arg);
+
                     } break;
 
                 case "myrequest":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
