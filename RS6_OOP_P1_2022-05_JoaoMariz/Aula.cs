@@ -73,9 +73,6 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     
                     try
                     {
-                        DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
-                        Aula a = new Aula(ptname, RSGym.currentUser, t, Utilitarios.RandomizarAulaAceite(), i);
-
                         var ptCheck = RSGym.personalTrainers
                                         .Where(c => c.Nome.Equals(n));
 
@@ -85,12 +82,16 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                             return;
                         }
 
-                        if (a.AulaAceite == true)
+                        if (Utilitarios.RandomizarAulaAceite())
                         {
-                            Utilitarios.ImprimirAula(a);
+                            DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
+                            Aula a = new Aula(ptname, RSGym.currentUser, t, true, i);
+
                             RSGym.aulas.Add(i, a);
                             RSGym.aulaNumero++;
-                            Console.WriteLine("Aula introduzida e aceite pelo ginásio");
+
+                            Utilitarios.ImprimirAula(a);
+                            Console.WriteLine("Aula introduzida e aceite pelo ginásio\n");
                             return;
                         }
 
