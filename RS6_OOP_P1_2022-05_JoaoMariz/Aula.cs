@@ -89,7 +89,6 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         {
                             Utilitarios.ImprimirAula(a);
                             RSGym.aulas.Add(i, a);
-                            RSGym.aulasTeste.Add(a);
                             RSGym.aulaNumero++;
                             Console.WriteLine("Aula introduzida e aceite pelo ginásio");
                             return;

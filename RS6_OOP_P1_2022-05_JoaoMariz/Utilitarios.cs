@@ -32,7 +32,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             {"myrequest",   "Lista o pedido efetuado\n" +
                             "\t\t Utilização: myrequest -r {nº pedido}"},
             {"requests",    "Listar todos os pedidos efetuados\n" +
-                            "\t\t Utilização: requests -a" }
+                            "\t\t Utilização: requests -a\n" },
+            {"logout",      "Logout do utilizador"}
         };
 
 

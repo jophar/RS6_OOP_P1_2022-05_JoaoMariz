@@ -238,6 +238,20 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                     } break;
 
+                case "logout":
+                    {
+                        if (currentUser.Equals("RSGymPT"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Autenticacao.Logout();
+
+                    }
+                    break;
+
+
                 default:
                     {
                         Utilitarios.AjudaInfo();
