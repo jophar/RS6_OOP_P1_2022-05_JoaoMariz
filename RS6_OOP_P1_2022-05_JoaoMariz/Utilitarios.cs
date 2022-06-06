@@ -32,7 +32,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             {"myrequest",   "Lista o pedido efetuado\n" +
                             "\t\t Utilização: myrequest -r {nº pedido}"},
             {"requests",    "Listar todos os pedidos efetuados\n" +
-                            "\t\t Utilização: requests -a" }
+                            "\t\t Utilização: requests -a\n" },
+            {"logout",      "Logout do utilizador"}
         };
 
 
@@ -59,7 +60,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
         internal static void AjudaInfo()
         {
-            Console.WriteLine("Comando não reconhecido. Use \"help\" para obter ajuda\n");
+            Console.WriteLine("Comando não reconhecido. Use o comando de acordo com o seguinte:\n");
         }
 
 
@@ -84,12 +85,12 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          */
         internal static void ImprimirAula(Aula a)
         {
-            Console.WriteLine("-- Detalhe da aula --");
+            Console.WriteLine("\n-- Detalhe da aula --");
             Console.WriteLine($"\tNumero do pedido: {a.NumeroDoPedido}");
             Console.WriteLine($"\tNome do PT: {a.PersonalTrainerName}");
             Console.WriteLine($"\tHora da Aula: {a.DataDaAula.ToShortTimeString()}");
             Console.WriteLine($"\tData da Aula: {a.DataDaAula.ToShortDateString()}");
-            Console.WriteLine($"\tMensagem: {a.Mensagem}");
+            Console.WriteLine($"\tMensagem: {a.Mensagem}\n");
         }
     }
 }

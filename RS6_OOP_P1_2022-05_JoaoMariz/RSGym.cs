@@ -10,6 +10,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
     /*
      * Classe RSGym que contem o objecto CLI e os metodos 
      * para as opções do CLI
+     * 
      */
 
     class RSGym
@@ -19,9 +20,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * Por default está gravado o RSGym e que só irá permitir registos
          * caso seja diferente deste valor
          * internal dado que é manupulado pela classe Autenticação
+         * 
          */
 
-        internal static string currentUser = "RSGym";
+        internal static string currentUser = "RSGymPT";
 
 
         /*
@@ -29,6 +31,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          * Caso seja evocado o metodo Sair(), altera a flag e o 
          * programa termina.
          * internal dado que é lido o valor no Program.cs
+         * 
          */
 
         internal static bool exitFlag = true;
@@ -40,6 +43,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
          *  - é feita uma verificação no código para saber qual é o ultimo valor presente para
          *    acrescentar 1 e gravar essa informação. Se inicializar o Dicionário vazio,
          *    o programa lança uma exepção.
+         *    
          */
 
         internal static Dictionary<int, Aula> aulas = new Dictionary<int, Aula>()
@@ -48,20 +52,49 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         };
 
 
-        private static Dictionary<string, List<DateTime>> personalTrainers = new Dictionary<string, List<DateTime>>()
+        /*
+         * Varável para registar o numero sequencial da aula dado que na escrita do Dictionary
+         * pode ocorrer a sobreposição de keys e o programa da exepção.
+         * 
+         */
+
+        internal static int aulaNumero = 1;
+
+        /*
+         * Criação do Objecto com os PT's usando o construtor completo.
+         * 
+         */
+
+        internal static List<PersonalTrainer> personalTrainers = new List<PersonalTrainer>()
         {
-            { "Maria", new List<DateTime>() { DateTime.MinValue } },
-            { "José", new List<DateTime>() { DateTime.MinValue } },
-            { "MeninoJesus", new List<DateTime>() { DateTime.MinValue } }
+            new PersonalTrainer("1", "Maria", new List<DateTime> { DateTime.Now}),
+            new PersonalTrainer("2", "José", new List<DateTime> { DateTime.Now}),
+            new PersonalTrainer("3", "Pedro", new List<DateTime> { DateTime.Now}),
         };
 
 
-        // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe
-        // usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
-        // Se necessário adicionar mais item's, já fica formatado
+        /* 
+         * Criação do Objecto com os Utilizadores do programa.
+         * Permite adicionar mais utilizadores (futuramente) através de um backoffice
+         * 
+         */
+
+        internal static List<User> utilizadores = new List<User>()
+        {
+            new User("1", "JMF", "João Mariz", "1a2b3c4d"),
+            new User("2", "Mariz", "Mariz", "123asd32")
+        };
+
+        /*
+         * Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe Utilitarios
+         * usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
+         * Se necessário adicionar mais item's, já fica formatado
+         *
+         */
+
         internal static void Ajuda()
         {
-            if (currentUser.Equals("RSGym"))
+            if (currentUser.Equals("RSGymPT"))
             {
                 foreach (KeyValuePair<string, string> item in Utilitarios.helpMenuNotLogged)
                 {
@@ -83,6 +116,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         }
 
+        /*
+         * Metodo para iniciar a consola e simular uma shell de trabalho
+         */
+
         internal static void IniciarConsola()
         {
             string arg = string.Empty;
@@ -90,6 +127,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             arg = Console.ReadLine();
             ParseArgument(arg);
         }
+
+        /*
+         * Metodo ParseArguments que usa a primeira palavra do argumento introduzido e chama o metodo correspondente
+         */
 
         private static void ParseArgument(string arg)
         {
@@ -99,11 +140,22 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             switch (tmp[0])
             {
-                case "help": Ajuda(); break;
-                case "exit": Sair(); break;
-                case "clear": LimparConsola(); break;
+                case "help":
+                    {
+                        Ajuda();
+                    } break;
 
-                case "login":
+                case "exit":
+                    {
+                        Sair();
+                    } break;
+
+                case "clear":
+                    {
+                        LimparConsola();
+                    } break;
+
+                case "login": // Se calhar ainda dá para melhorar o metodo
                     {
                         string login, pass;
                         string patternLogin = @"^login -u (?<user>[a-zA-Z0-9]+) -p (?<pass>[a-zA-Z0-9]+)";
@@ -124,12 +176,15 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         }
 
                         else
+                        {
                             Utilitarios.AjudaInfo();
+                            Ajuda();
+                        }
                     } break;
 
                 case "request":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
@@ -140,59 +195,54 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                 case "cancel":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
 
-                        Aula.CancelarPedido(arg);
+                        Aula.Cancel(arg);
                     } break;
 
                 case "requests":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
 
-                        foreach(KeyValuePair<int,Aula> a in aulas)
-                        {
-                            if(a.Value.UserName.Equals(currentUser) && a.Value.AulaAceite)
-                            {
-                                Utilitarios.ImprimirAula(a.Value);
-                            }
-                        }
+                        Aula.Requests(arg);
 
                     } break;
 
                 case "finish":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
 
-                        Aula.ConcluirAula(arg);
+                        Aula.Finish(arg);
 
-                    }break;
+                    } break;
 
                 case "message":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
                         }
 
-                        Aula.InserirMensagem(arg);
+                        Aula.Message(arg);
+
                     } break;
 
                 case "myrequest":
                     {
-                        if (currentUser.Equals("RSGym"))
+                        if (currentUser.Equals("RSGymPT"))
                         {
                             Console.WriteLine("Por favor efetue login na consola\n");
                             return;
@@ -202,6 +252,20 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                     } break;
 
+                case "logout":
+                    {
+                        if (currentUser.Equals("RSGymPT"))
+                        {
+                            Console.WriteLine("Por favor efetue login na consola\n");
+                            return;
+                        }
+
+                        Autenticacao.Logout();
+
+                    }
+                    break;
+
+
                 default:
                     {
                         Utilitarios.AjudaInfo();
@@ -210,11 +274,19 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         }
 
+        /*
+         * Metodo para o comando exit
+         */
+
         internal static void Sair()
         {
             exitFlag = false;
         }
 
+
+        /*
+         * Metodo para o comando clear
+         */
 
         internal static void LimparConsola()
         {
