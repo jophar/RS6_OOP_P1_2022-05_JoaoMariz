@@ -90,7 +90,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             Console.WriteLine($"\tNome do PT: {a.PersonalTrainerName}");
             Console.WriteLine($"\tHora da Aula: {a.DataDaAula.ToShortTimeString()}");
             Console.WriteLine($"\tData da Aula: {a.DataDaAula.ToShortDateString()}");
-            Console.WriteLine($"\tMensagem: {a.Mensagem}");
+            Console.WriteLine($"\tMensagem: {a.Mensagem}\n");
         }
     }
 }

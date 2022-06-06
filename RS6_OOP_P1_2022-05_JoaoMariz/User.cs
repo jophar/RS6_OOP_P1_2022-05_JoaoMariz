@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace RS6_OOP_P1_2022_05_JoaoMariz
 {
+    /*
+     * Classe User para criação do objecto com as informações sobre o utilizador.
+     * Não tem metodos para operar as propriedades dado que o programa não tem backoffice
+     * 
+     */
+
     internal class User
     {
         internal string Id { get; set; }
@@ -13,6 +19,9 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal string Nome { get; set; }
         internal string PassWord { get; set; }
 
+        /*
+         * Construtores
+         */
 
         internal User()
         {

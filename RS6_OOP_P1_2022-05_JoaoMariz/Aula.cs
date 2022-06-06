@@ -21,6 +21,11 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         internal int NumeroDoPedido { get; set; }
         internal string Mensagem { get; set; }
 
+
+        /*
+         * Construtores
+         * 
+         */
         internal Aula()
         {
             PersonalTrainerName = string.Empty;
@@ -52,6 +57,21 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         }
 
 
+        /*
+         * Metodos da classe Aula
+         * 
+         */
+
+        /*
+         * Metodo para o comando request para inserir uma aula no sistema
+         *  - Utiliza Regex para validação da sintaxe do pedido
+         *  - Verifica por lambda expression no objecto com os personalTrainser se existem
+         *  - Verifica se a data e a hora estão no formato correcto para aplicar ao construtor da estrutura Datetime
+         * 
+         * TODO:
+         *  - Verificar os horarios dos PT's se estão disponíveis
+         */
+
         internal static void Request(string argRequest)
         {
             string patternRequest = @"^request -n (?<nome>[A-zÀ-ú0-9]+) -d (?<data>[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]) -h (?<hora>[0-9][0-9]:[0-9][0-9]$)";
@@ -76,35 +96,37 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         var ptCheck = RSGym.personalTrainers
                                         .Where(c => c.Nome.Equals(n));
 
-                        if(!ptCheck.Any())
+                        bool aulaAceite = Utilitarios.RandomizarAulaAceite();
+
+                        DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
+
+                        if (!ptCheck.Any())
                         {
                             Console.WriteLine($"Lamentamos mas o PT com nome {n} não existe!\n");
                             return;
                         }
 
-                        if (Utilitarios.RandomizarAulaAceite())
+                        if (aulaAceite)
                         {
-                            DateTime t = new DateTime(Convert.ToInt32(d[2]), Convert.ToInt32(d[1]), Convert.ToInt32(d[0]), Convert.ToInt32(h[0]), Convert.ToInt32(h[1]), 0);
-                            Aula a = new Aula(ptname, RSGym.currentUser, t, true, i);
+                            Aula a = new Aula(ptname, RSGym.currentUser, t, aulaAceite, i);
 
                             RSGym.aulas.Add(i, a);
                             RSGym.aulaNumero++;
-
                             Utilitarios.ImprimirAula(a);
-                            Console.WriteLine("Aula introduzida e aceite pelo ginásio\n");
+                            Console.WriteLine("A aula introduzida foi aceite pelo ginásio\n");
                             return;
                         }
 
                         else
                         {   
-                            Console.WriteLine("Lamentamos mas o ginasio não aceitou o seu pedido");
+                            Console.WriteLine("Lamentamos mas o ginasio não aceitou o seu pedido\n");
                             return;
                         }
                     }
 
                     catch (System.ArgumentOutOfRangeException)
                     {
-                        Console.WriteLine("A data ou hora introduzidas são incorrectas");
+                        Console.WriteLine("A data ou hora introduzidas são incorrectas\n");
                         return;
                     }
                 }
@@ -115,6 +137,16 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 Utilitarios.AjudaInfo();
             }
         }
+
+        /*
+         * Metodo para o comando cancel para cancelar uma aula tendo em conta o número unico de request da mesma
+         *  - Utiliza Regex para validação da sintaxe do pedido a cancelar
+         *  - Dupla proteção contra a instrodução de um numero de pedido inválido (por ex. letras)
+         *      - regex
+         *      - tryparse
+         *  - Proteção contra a eliminação de pedidos de outros utilizadores.
+         *  
+         */
 
         internal static void Cancel(string argCancel)
         {
@@ -155,6 +187,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 Utilitarios.AjudaInfo();
             }
         }
+
+        /* 
+         * Metodo para o comando finish que terminar uma aula
+         *  - Verifica se o campo de mensagem já está preenchido para não sobrepor informação
+         *  - Proteção conta a conclusão de aulas de outros utilizadores que não aquele que se encontra loggado
+         *  
+         */
 
         internal static void Finish(string argFinish)
         {
@@ -201,6 +240,14 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         }
 
+
+        /*
+         * Metodo para o comando myrequest para listagem no ecra das informações registadas da aula
+         * - Regex para verificação de sintaxe
+         * - Lambda expression para filtrar a aula com o request pretendido
+         * 
+         */
+
         internal static void MyRequest(string argMyrequest)
         {
             int pedido = 0;
@@ -219,13 +266,12 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
                     if (b)
                     {
-                        foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
+                        var myRequest = RSGym.aulas.Values
+                                            .Where(aula => aula.NumeroDoPedido.Equals(pedido) && aula.UserName.Equals(RSGym.currentUser));
+                        if (myRequest.Any())
                         {
-                            if (aula.Key == pedido && aula.Value.UserName.Equals(RSGym.currentUser))
-                            {
-                                Utilitarios.ImprimirAula(aula.Value);
-                                return;
-                            }
+                            Utilitarios.ImprimirAula(myRequest.First());
+                            return;
                         }
 
                         Console.WriteLine("Pedido não encontrado");
@@ -239,6 +285,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                 Utilitarios.AjudaInfo();
             }
         }
+
+
+        /* Metodo para o comando message que insere uma mensagem personalizada se a propriedade da aula estiver vazia
+         * - Regex para verificação de sintaxe
+         * - Proteção contra a escrita de mensagens em aulas de outro utilizador
+         * 
+         */
 
         internal static void Message(string argMessage) 
         {
@@ -260,7 +313,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     {
                         foreach (KeyValuePair<int, Aula> aula in RSGym.aulas)
                         {
-                            if (aula.Value.NumeroDoPedido == pedido && aula.Value.Mensagem.Equals(string.Empty))
+                            if (aula.Value.NumeroDoPedido == pedido && aula.Value.Mensagem.Equals(string.Empty) && aula.Value.UserName.Equals(RSGym.currentUser))
                             {
 
                                 aula.Value.Mensagem = $"{groups["mensagem"].Value} - {DateTime.Now}";
@@ -287,6 +340,12 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         } 
     
+        /* Metodo para o comando requests que lista todas as aulas registadas de um utilizador.
+         * - Regex para verificação de sintaxe
+         * - Utilização de lambda expression para construir um novo objecto filtrado de todas as aulas daquele utilizador
+         * 
+         */
+
         internal static void Requests(string argRequests)
         {
             string patternRequests = @"^requests -a+$";
@@ -301,7 +360,8 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     var minhasAulas = RSGym.aulas
                                         .Where(c => c.Value.UserName.Equals(RSGym.currentUser) && c.Value.AulaAceite)
                                         .OrderBy(c => c.Key);
-                   
+
+                    // Utilização do metodo Count() em vez o Any()
                     if (minhasAulas.Count() == 0)
                         Console.WriteLine("Não tem pedidos registados\n");
 
@@ -314,7 +374,6 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                     }
                 }
                 return;
-
             }
 
             else

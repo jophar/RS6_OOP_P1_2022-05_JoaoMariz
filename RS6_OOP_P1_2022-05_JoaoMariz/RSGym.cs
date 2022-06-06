@@ -86,7 +86,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
         };
 
 
-        // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe
+        // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe Utilitarios
         // usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
         // Se necessário adicionar mais item's, já fica formatado
         internal static void Ajuda()
@@ -113,6 +113,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         }
 
+        /*
+         * Metodo para iniciar a consola e simular uma shell de trabalho
+         */
+
         internal static void IniciarConsola()
         {
             string arg = string.Empty;
@@ -120,6 +124,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             arg = Console.ReadLine();
             ParseArgument(arg);
         }
+
+        /*
+         * Metodo ParseArguments que usa a primeira palavra do argumento introduzido e chama o metodo correspondente
+         */
 
         private static void ParseArgument(string arg)
         {
@@ -260,11 +268,19 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
         }
 
+        /*
+         * Metodo para o comando exit
+         */
+
         internal static void Sair()
         {
             exitFlag = false;
         }
 
+
+        /*
+         * Metodo para o comando clear
+         */
 
         internal static void LimparConsola()
         {
