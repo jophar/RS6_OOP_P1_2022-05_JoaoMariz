@@ -85,10 +85,13 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             new User("2", "Mariz", "Mariz", "123asd32")
         };
 
+        /*
+         * Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe Utilitarios
+         * usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
+         * Se necessário adicionar mais item's, já fica formatado
+         *
+         */
 
-        // Metodo para lista o menu de ajuda com recurso ao Dictionary que é váriavel da Classe Utilitarios
-        // usado o .Length para ficar tudo alinhado de acordo com a dimensão da primeira palavra
-        // Se necessário adicionar mais item's, já fica formatado
         internal static void Ajuda()
         {
             if (currentUser.Equals("RSGymPT"))
@@ -173,7 +176,10 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
                         }
 
                         else
+                        {
                             Utilitarios.AjudaInfo();
+                            Ajuda();
+                        }
                     } break;
 
                 case "request":

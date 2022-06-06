@@ -134,7 +134,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         }
 
@@ -184,7 +184,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         }
 
@@ -236,7 +236,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         }
 
@@ -282,7 +282,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         }
 
@@ -336,7 +336,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
             }
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         } 
     
@@ -378,7 +378,7 @@ namespace RS6_OOP_P1_2022_05_JoaoMariz
 
             else
             {
-                Utilitarios.AjudaInfo();
+                RSGym.Ajuda();
             }
         }
     }
